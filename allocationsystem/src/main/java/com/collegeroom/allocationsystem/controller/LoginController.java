@@ -31,10 +31,8 @@ public class LoginController {
         return "redirect:/login";
     }
 
-
-
     @GetMapping("/")
     public String home() {
-    return "redirect:/login";
+        return "redirect:/login";
     }
 }

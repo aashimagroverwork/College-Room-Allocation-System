@@ -1,249 +1,473 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Student Dashboard</title>
-
+    <title>Student Dashboard | College Room Booking System</title>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f8;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;
+            --border: #334155;
+            --info: #06b6d4;
         }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navbar style */
         .navbar {
-            background: #1f2937;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand .logo-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            border-color: var(--danger);
             color: white;
-            padding: 18px 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        .header {
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .navbar h2 {
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
             margin: 0;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .logout {
+        .header p {
+            color: var(--text-secondary);
+            margin: 5px 0 0 0;
+            font-size: 0.95rem;
+        }
+
+        .btn-view-schedule {
+            background: var(--primary);
             color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
+        .btn-view-schedule:hover {
+            background: var(--primary-hover);
         }
 
-        .welcome {
-            margin-bottom: 25px;
+        /* Alert styles */
+        .alert {
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .card {
-            background: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
         }
 
-        .card h3 {
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: #6ee7b7;
+        }
+
+        /* Two Column Layout */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 992px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
             margin-top: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Forms */
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        input,
-        select,
-        textarea {
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         textarea {
             resize: vertical;
         }
 
-        button {
-            background: #2563eb;
+        .btn-submit {
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        .btn-submit:hover {
+            background: var(--primary-hover);
         }
 
-        .info {
-            color: #666;
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-hod {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
         }
     </style>
 </head>
-
 <body>
 
-<div class="navbar">
-    <h2>College Room Booking System</h2>
-    <form th:action="@{/logout}" method="post" style="display: inline; margin: 0;">
-        <button type="submit" class="logout" style="background: none; border: none; font-size: inherit; font-family: inherit; cursor: pointer; padding: 0;">Logout</button>
-    </form>
-</div>
+<nav class="navbar">
+    <a href="#" class="navbar-brand">
+        <span class="logo-dot"></span>
+        College Booking
+    </a>
+    <div class="nav-links">
+        <span class="nav-link">Role: Student</span>
+        <a href="/schedule" class="nav-link">Schedule Calendar</a>
+        <form th:action="@{/logout}" method="post" style="margin: 0; display: inline;">
+            <button type="submit" class="btn-logout" style="background: none; border: 1px solid var(--border); cursor: pointer;">Logout</button>
+        </form>
+    </div>
+</nav>
 
 <div class="container">
-
-    <div class="welcome">
-        <h1>Student Dashboard</h1>
-        <p>Request a room for your academic activities.</p>
+    <div class="header">
+        <div>
+            <h1>Student Dashboard</h1>
+            <p>Request a room booking and track your requests in real-time.</p>
+        </div>
+        <div>
+            <a href="/schedule" class="btn-view-schedule">View Booking Schedule</a>
+        </div>
     </div>
 
-    <!-- Booking Request -->
-    <div class="card">
-
-        <h3>Request a Room</h3>
-
-        <form action="/student/bookings" method="post">
-
-            <div class="form-group">
-                <label for="room">Select Room</label>
-
-                <select id="room" name="roomId" required>
-
-                    <option value="">
-                        -- Select a room --
-                    </option>
-
-                    <option th:each="room : ${rooms}"
-                            th:value="${room.id}"
-                            th:text="${room.name + ' - ' + room.building + ' (Capacity: ' + room.capacity + ')'}">
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="date">Date</label>
-
-                <input type="date"
-                       id="date"
-                       name="date"
-                       required>
-            </div>
-
-            <div class="form-group">
-                <label for="startTime">Start Time</label>
-
-                <input type="time"
-                       id="startTime"
-                       name="startTime"
-                       required>
-            </div>
-
-            <div class="form-group">
-                <label for="endTime">End Time</label>
-
-                <input type="time"
-                       id="endTime"
-                       name="endTime"
-                       required>
-            </div>
-
-            <div class="form-group">
-                <label for="purpose">Purpose</label>
-
-                <textarea id="purpose"
-                          name="purpose"
-                          rows="4"
-                          placeholder="Enter the purpose of the booking"
-                          required></textarea>
-            </div>
-
-            <button type="submit">
-                Submit Booking Request
-            </button>
-
-        </form>
-
+    <!-- Success and Error Alerts -->
+    <div th:if="${param.error}" class="alert alert-error">
+        <span th:if="${param.error[0] == 'conflict'}">⚠️ Error: A booking conflict was detected! The room is already booked for that date and time range.</span>
+        <span th:if="${param.error[0] != 'conflict'}">⚠️ Error: An unexpected error occurred.</span>
     </div>
 
-<!-- My Bookings -->
-<div class="card">
-
-    <h3>My Bookings</h3>
-
-    <div th:if="${#lists.isEmpty(myBookings)}">
-        <p class="info">
-            You have not submitted any booking requests yet.
-        </p>
+    <div th:if="${param.success}" class="alert alert-success">
+        <span th:if="${param.success[0] == 'created'}">✓ Your booking request has been successfully submitted and is pending review!</span>
     </div>
 
-    <table th:unless="${#lists.isEmpty(myBookings)}"
-           style="width: 100%; border-collapse: collapse;">
+    <div class="layout-grid">
+        <!-- Room Request Form -->
+        <div class="section-card">
+            <h2 class="section-title">Request a Room</h2>
+            <form action="/student/bookings" method="post">
+                <div class="form-group">
+                    <label for="room">Select Room / Hall</label>
+                    <select id="room" name="roomId" required>
+                        <option value="">-- Choose a room --</option>
+                        <option th:each="room : ${rooms}"
+                                th:value="${room.id}"
+                                th:text="${room.name + ' - ' + room.building + ' (Cap: ' + room.capacity + ')'}">
+                        </option>
+                    </select>
+                </div>
 
-        <thead>
-        <tr>
-            <th style="padding: 10px; text-align: left;">Room</th>
-            <th style="padding: 10px; text-align: left;">Date</th>
-            <th style="padding: 10px; text-align: left;">Time</th>
-            <th style="padding: 10px; text-align: left;">Purpose</th>
-            <th style="padding: 10px; text-align: left;">Status</th>
-        </tr>
-        </thead>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
 
-        <tbody>
+                <div class="form-group">
+                    <label for="startTime">Start Time</label>
+                    <input type="time" id="startTime" name="startTime" required>
+                </div>
 
-        <tr th:each="booking : ${myBookings}">
+                <div class="form-group">
+                    <label for="endTime">End Time</label>
+                    <input type="time" id="endTime" name="endTime" required>
+                </div>
 
-            <td style="padding: 10px;"
-                th:text="${booking.room.name}">
-                Room
-            </td>
+                <div class="form-group">
+                    <label for="purpose">Purpose of Booking</label>
+                    <textarea id="purpose" name="purpose" rows="4" placeholder="e.g. Club meeting, study group, workshop..." required></textarea>
+                </div>
 
-            <td style="padding: 10px;"
-                th:text="${booking.date}">
-                Date
-            </td>
+                <button type="submit" class="btn-submit">Submit Request</button>
+            </form>
+        </div>
 
-            <td style="padding: 10px;"
-                th:text="${booking.startTime + ' - ' + booking.endTime}">
-                Time
-            </td>
+        <!-- My Bookings List -->
+        <div class="section-card">
+            <h2 class="section-title">My Booking History</h2>
+            <div class="table-responsive">
+                <div th:if="${#lists.isEmpty(myBookings)}" class="empty-state">
+                    <div class="empty-state">📅</div>
+                    <p>You haven't requested any room bookings yet.</p>
+                </div>
 
-            <td style="padding: 10px;"
-                th:text="${booking.purpose}">
-                Purpose
-            </td>
-
-            <td style="padding: 10px;"
-                th:text="${booking.status}">
-                PENDING
-            </td>
-
-        </tr>
-
-        </tbody>
-
-    </table>
-
+                <table th:unless="${#lists.isEmpty(myBookings)}">
+                    <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Date</th>
+                        <th>Time Range</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="booking : ${myBookings}">
+                        <td th:text="${booking.room.name}">Room Name</td>
+                        <td th:text="${booking.date}">Date</td>
+                        <td th:text="${booking.startTime + ' - ' + booking.endTime}">Time</td>
+                        <td th:text="${booking.purpose}">Purpose</td>
+                        <td>
+                            <span th:if="${#strings.toString(booking.status) == 'PENDING'}" class="status-badge status-pending">Pending HOD</span>
+                            <span th:if="${#strings.toString(booking.status) == 'HOD_APPROVED'}" class="status-badge status-hod">HOD Approved</span>
+                            <span th:if="${#strings.toString(booking.status) == 'APPROVED'}" class="status-badge status-approved">Approved</span>
+                            <span th:if="${#strings.toString(booking.status) == 'REJECTED'}" class="status-badge status-rejected">Rejected</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
-</div>
+<script>
+    // Pre-populate date picker with tomorrow's date by default
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateInput = document.getElementById("date");
+        if (dateInput && !dateInput.value) {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const yyyy = tomorrow.getFullYear();
+            const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const dd = String(tomorrow.getDate()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    });
+</script>
 
 </body>
 </html>

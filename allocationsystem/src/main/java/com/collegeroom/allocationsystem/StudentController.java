@@ -95,6 +95,6 @@ public class StudentController {
 
         bookingRepository.save(booking);
 
-        return "redirect:/student/dashboard";
+        return "redirect:/student/dashboard?success=created";
     }
 }
