@@ -8,6 +8,7 @@ import com.collegeroom.allocationsystem.repository.RoomRepository;
 import com.collegeroom.allocationsystem.repository.UserRepository;
 import com.collegeroom.allocationsystem.service.BookingConflictService;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,9 +62,9 @@ public class StudentController {
     @PostMapping("/student/bookings")
     public String createBooking(
             @RequestParam Long roomId,
-            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate date,
-            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.TIME) LocalTime startTime,
-            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.TIME) LocalTime endTime,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime,
             @RequestParam String purpose,
             Authentication authentication) {
 
