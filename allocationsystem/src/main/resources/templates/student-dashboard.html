@@ -379,7 +379,7 @@
         <!-- Room Request Form -->
         <div class="section-card">
             <h2 class="section-title">Request a Room</h2>
-            <form action="/student/bookings" method="post">
+            <form th:action="@{/student/bookings}" method="post">
                 <div class="form-group">
                     <label for="room">Select Room / Hall</label>
                     <select id="room" name="roomId" required>

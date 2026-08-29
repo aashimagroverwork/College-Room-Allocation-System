@@ -563,6 +563,8 @@
                 <div id="edit-room-section" class="edit-overlay-section">
                     <h3 style="margin-top: 0; color: var(--info);">Edit Room Details</h3>
                     <form id="edit-room-form" method="post" action="">
+                        <!-- CSRF Token for Security -->
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                             <div>
                                 <label for="edit-name">Room Name</label>
