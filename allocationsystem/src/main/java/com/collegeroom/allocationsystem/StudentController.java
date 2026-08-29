@@ -61,9 +61,9 @@ public class StudentController {
     @PostMapping("/student/bookings")
     public String createBooking(
             @RequestParam Long roomId,
-            @RequestParam LocalDate date,
-            @RequestParam LocalTime startTime,
-            @RequestParam LocalTime endTime,
+            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.TIME) LocalTime endTime,
             @RequestParam String purpose,
             Authentication authentication) {
 
