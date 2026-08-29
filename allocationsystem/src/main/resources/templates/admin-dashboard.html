@@ -522,6 +522,15 @@
             <!-- Rooms List -->
             <div class="section-card">
                 <h2 class="section-title">Manage Rooms & Halls</h2>
+                
+                <!-- Dynamic Tabs to Filter Rooms -->
+                <div class="tabs-container" style="margin-bottom: 20px; display: flex; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+                    <button type="button" class="tab-btn active" onclick="filterRooms('all', this)" style="background: var(--primary); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">All Rooms</button>
+                    <button type="button" class="tab-btn" onclick="filterRooms('lrs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Lecture Rooms (Lrs)</button>
+                    <button type="button" class="tab-btn" onclick="filterRooms('crs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Classrooms (Crs)</button>
+                    <button type="button" class="tab-btn" onclick="filterRooms('labs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Labs & Seminars</button>
+                </div>
+
                 <div class="table-responsive">
                     <div th:if="${#lists.isEmpty(rooms)}" class="empty-state">
                         <div class="empty-icon">🏢</div>
@@ -537,7 +546,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="room : ${rooms}">
+                        <tr th:each="room : ${rooms}" class="room-row" th:data-building="${room.building}">
                             <td th:text="${room.name}">Room 101</td>
                             <td th:text="${room.building}">Block A</td>
                             <td th:text="${room.capacity}">50</td>
@@ -631,6 +640,35 @@
 
     function hideEditForm() {
         document.getElementById('edit-room-section').style.display = 'none';
+    }
+
+    function filterRooms(category, activeBtn) {
+        // Update active tab styling
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.style.background = 'transparent';
+            btn.style.borderColor = 'var(--border)';
+            btn.style.color = 'var(--text-secondary)';
+        });
+
+        // Set clicked button to active styling
+        activeBtn.style.background = 'var(--primary)';
+        activeBtn.style.borderColor = 'var(--primary)';
+        activeBtn.style.color = 'white';
+
+        const rows = document.querySelectorAll('.room-row');
+        rows.forEach(row => {
+            const building = row.getAttribute('data-building');
+            if (category === 'all') {
+                row.style.display = '';
+            } else if (category === 'lrs') {
+                row.style.display = (building === 'Lrs Block') ? '' : 'none';
+            } else if (category === 'crs') {
+                row.style.display = (building === 'Crs Block') ? '' : 'none';
+            } else if (category === 'labs') {
+                row.style.display = (building !== 'Lrs Block' && building !== 'Crs Block') ? '' : 'none';
+            }
+        });
     }
 </script>
 </body>

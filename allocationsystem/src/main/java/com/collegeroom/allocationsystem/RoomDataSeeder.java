@@ -43,7 +43,13 @@ public class RoomDataSeeder implements CommandLineRunner {
         }
 
         // 3. Seed other specialized rooms
-        String[] individualRooms = {"Seminar room", "Mmr", "Scavi", "Bonut lab", "Knowledge lab"};
+        // Rename old misspelled room if it exists in the database
+        roomRepository.findByName("Bonut lab").ifPresent(r -> {
+            r.setName("Bonet lab");
+            roomRepository.save(r);
+        });
+
+        String[] individualRooms = {"Seminar room", "Mmr", "Scavi", "Bonet lab", "Knowledge lab"};
         int[] capacities = {80, 90, 60, 80, 30};
         String[] buildings = {"Main Block", "Main Block", "Main Block", "Science Block", "Library Block"};
 
