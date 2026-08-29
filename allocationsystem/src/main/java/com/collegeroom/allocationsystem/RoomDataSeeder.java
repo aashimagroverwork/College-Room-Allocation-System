@@ -49,6 +49,19 @@ public class RoomDataSeeder implements CommandLineRunner {
             roomRepository.save(r);
         });
 
+        // Delete obsolete rooms if they exist
+        String[] roomsToDelete = {"Room 101", "Seminar Hall 1", "Lab 203"};
+        for (String rName : roomsToDelete) {
+            roomRepository.findByName(rName).ifPresent(r -> {
+                try {
+                    roomRepository.delete(r);
+                    System.out.println(">>> Deleted obsolete room: " + rName);
+                } catch (Exception e) {
+                    System.out.println(">>> Could not delete obsolete room " + rName + ": " + e.getMessage());
+                }
+            });
+        }
+
         String[] individualRooms = {"Seminar room", "Mmr", "Scavi", "Bonet lab", "Knowledge lab"};
         int[] capacities = {80, 90, 60, 80, 30};
         String[] buildings = {"Main Block", "Main Block", "Main Block", "Science Block", "Library Block"};

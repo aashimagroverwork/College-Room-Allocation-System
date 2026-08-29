@@ -525,10 +525,10 @@
                 
                 <!-- Dynamic Tabs to Filter Rooms -->
                 <div class="tabs-container" style="margin-bottom: 20px; display: flex; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                    <button type="button" class="tab-btn active" onclick="filterRooms('all', this)" style="background: var(--primary); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">All Rooms</button>
+                    <button type="button" class="tab-btn active" onclick="filterRooms('labs', this)" style="background: var(--primary); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Labs & Seminars</button>
                     <button type="button" class="tab-btn" onclick="filterRooms('lrs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Lecture Rooms (Lrs)</button>
                     <button type="button" class="tab-btn" onclick="filterRooms('crs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Classrooms (Crs)</button>
-                    <button type="button" class="tab-btn" onclick="filterRooms('labs', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">Labs & Seminars</button>
+                    <button type="button" class="tab-btn" onclick="filterRooms('all', this)" style="background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease;">All Rooms</button>
                 </div>
 
                 <div class="table-responsive">
@@ -670,6 +670,14 @@
             }
         });
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Trigger default filter 'labs' on page load
+        const labsBtn = document.querySelector('.tab-btn[onclick*="labs"]');
+        if (labsBtn) {
+            filterRooms('labs', labsBtn);
+        }
+    });
 </script>
 </body>
 </html>
