@@ -20,10 +20,13 @@ public class RoleBasedRedirectHandler implements AuthenticationSuccessHandler {
             String role = authority.getAuthority();
             if (role.equals("ROLE_STUDENT")) {
                 redirectUrl = "/student/dashboard";
+                break;
             } else if (role.equals("ROLE_HOD")) {
                 redirectUrl = "/hod/dashboard";
+                break;
             } else if (role.equals("ROLE_ADMIN")) {
                 redirectUrl = "/admin/dashboard";
+                break;
             }
         }
 

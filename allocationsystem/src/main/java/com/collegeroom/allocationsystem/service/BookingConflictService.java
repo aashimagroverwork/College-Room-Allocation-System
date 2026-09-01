@@ -19,10 +19,20 @@ public class BookingConflictService {
     }
 
     public boolean hasConflict(Long roomId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        return hasConflict(roomId, date, startTime, endTime, null);
+    }
+
+    public boolean hasConflict(Long roomId, LocalDate date, LocalTime startTime, LocalTime endTime,
+                               Long excludeBookingId) {
         List<Booking> existingBookings = bookingRepository.findByRoomIdAndDate(roomId, date);
 
         for (Booking booking : existingBookings) {
-            if (booking.getStatus() == BookingStatus.APPROVED) {
+            if (excludeBookingId != null && booking.getId().equals(excludeBookingId)) {
+                continue;
+            }
+            if (booking.getStatus() == BookingStatus.APPROVED
+                    || booking.getStatus() == BookingStatus.HOD_APPROVED
+                    || booking.getStatus() == BookingStatus.PENDING) {
                 boolean overlaps = startTime.isBefore(booking.getEndTime())
                         && endTime.isAfter(booking.getStartTime());
                 if (overlaps) {

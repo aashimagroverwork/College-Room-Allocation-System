@@ -78,6 +78,10 @@ public class StudentController {
             return "redirect:/student/dashboard?error=invalid_time";
         }
 
+        if (date.isBefore(LocalDate.now())) {
+            return "redirect:/student/dashboard?error=past_date";
+        }
+
         boolean conflict = bookingConflictService.hasConflict(
                 roomId,
                 date,

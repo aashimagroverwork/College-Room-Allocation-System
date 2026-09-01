@@ -38,9 +38,9 @@ public class AdminController {
 
         long totalRooms = roomRepository.count();
         long totalBookings = bookingRepository.count();
-        long pendingHODApproved = awaitingApprovals.size();
-        long approvedCount = bookingRepository.findByStatus(BookingStatus.APPROVED).size();
-        long rejectedCount = bookingRepository.findByStatus(BookingStatus.REJECTED).size();
+        long pendingHODApproved = bookingRepository.countByStatus(BookingStatus.HOD_APPROVED);
+        long approvedCount = bookingRepository.countByStatus(BookingStatus.APPROVED);
+        long rejectedCount = bookingRepository.countByStatus(BookingStatus.REJECTED);
 
         model.addAttribute("awaitingApprovals", awaitingApprovals);
         model.addAttribute("rooms", rooms);
@@ -62,7 +62,8 @@ public class AdminController {
                 booking.getRoom().getId(),
                 booking.getDate(),
                 booking.getStartTime(),
-                booking.getEndTime()
+                booking.getEndTime(),
+                booking.getId()
         );
 
         if (conflict) {
@@ -124,7 +125,15 @@ public class AdminController {
     @PostMapping("/admin/rooms/delete/{id}")
     public String deleteRoom(@PathVariable Long id) {
         try {
-            roomRepository.deleteById(id);
+            Room room = roomRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+            List<Booking> roomBookings = bookingRepository.findByRoomId(id);
+            for (Booking b : roomBookings) {
+                bookingRepository.delete(b);
+            }
+
+            roomRepository.delete(room);
             return "redirect:/admin/dashboard?success=room_deleted";
         } catch (Exception e) {
             return "redirect:/admin/dashboard?error=delete_failed";

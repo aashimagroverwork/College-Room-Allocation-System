@@ -50,11 +50,14 @@ public class HodTestDataSeeder implements CommandLineRunner {
                 student.setDepartment("Computer Science");
                 userRepository.save(student);
 
-                Room room = new Room();
-                room.setName("Lecture Hall 1");
-                room.setCapacity(60);
-                room.setBuilding("Main Block");
-                roomRepository.save(room);
+                Room room = roomRepository.findByName("Lecture Hall 1")
+                        .orElseGet(() -> {
+                            Room newRoom = new Room();
+                            newRoom.setName("Lecture Hall 1");
+                            newRoom.setCapacity(60);
+                            newRoom.setBuilding("Main Block");
+                            return roomRepository.save(newRoom);
+                        });
 
                 Booking booking = new Booking();
                 booking.setRoom(room);

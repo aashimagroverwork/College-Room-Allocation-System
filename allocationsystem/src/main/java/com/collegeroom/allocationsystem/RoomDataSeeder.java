@@ -58,8 +58,7 @@ public class RoomDataSeeder implements CommandLineRunner {
             for (String rName : roomsToDelete) {
                 roomRepository.findByName(rName).ifPresent(r -> {
                     try {
-                        bookingRepository.findAll().stream()
-                            .filter(b -> b.getRoom() != null && b.getRoom().getId().equals(r.getId()))
+                        bookingRepository.findByRoomId(r.getId())
                             .forEach(b -> {
                                 try {
                                     bookingRepository.delete(b);

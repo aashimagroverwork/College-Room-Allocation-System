@@ -369,7 +369,8 @@
     <div th:if="${param.error}" class="alert alert-error">
         <span th:if="${param.error[0] == 'conflict'}">⚠️ Error: A booking conflict was detected! The room is already booked for that date and time range.</span>
         <span th:if="${param.error[0] == 'invalid_time'}">⚠️ Error: End time must be later than start time!</span>
-        <span th:if="${param.error[0] != 'conflict' and param.error[0] != 'invalid_time'}">⚠️ Error: An unexpected error occurred.</span>
+        <span th:if="${param.error[0] == 'past_date'}">⚠️ Error: Booking date cannot be in the past!</span>
+        <span th:if="${param.error[0] != 'conflict' and param.error[0] != 'invalid_time' and param.error[0] != 'past_date'}">⚠️ Error: An unexpected error occurred.</span>
     </div>
 
     <div th:if="${param.success}" class="alert alert-success">
@@ -503,7 +504,7 @@
             <h2 class="section-title">My Booking History</h2>
             <div class="table-responsive">
                 <div th:if="${#lists.isEmpty(myBookings)}" class="empty-state">
-                    <div class="empty-state">📅</div>
+                    <div class="empty-icon">📅</div>
                     <p>You haven't requested any room bookings yet.</p>
                 </div>
 
