@@ -74,6 +74,10 @@ public class StudentController {
         User student = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
+        if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
+            return "redirect:/student/dashboard?error=invalid_time";
+        }
+
         boolean conflict = bookingConflictService.hasConflict(
                 roomId,
                 date,

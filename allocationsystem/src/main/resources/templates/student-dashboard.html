@@ -368,7 +368,8 @@
     <!-- Success and Error Alerts -->
     <div th:if="${param.error}" class="alert alert-error">
         <span th:if="${param.error[0] == 'conflict'}">⚠️ Error: A booking conflict was detected! The room is already booked for that date and time range.</span>
-        <span th:if="${param.error[0] != 'conflict'}">⚠️ Error: An unexpected error occurred.</span>
+        <span th:if="${param.error[0] == 'invalid_time'}">⚠️ Error: End time must be later than start time!</span>
+        <span th:if="${param.error[0] != 'conflict' and param.error[0] != 'invalid_time'}">⚠️ Error: An unexpected error occurred.</span>
     </div>
 
     <div th:if="${param.success}" class="alert alert-success">
@@ -409,12 +410,74 @@
 
                 <div class="form-group">
                     <label for="startTime">Start Time</label>
-                    <input type="time" id="startTime" name="startTime" required>
+                    <select id="startTime" name="startTime" required onchange="validateTimeRange()">
+                        <option value="">-- Select Start Time --</option>
+                        <option value="07:00">07:00 AM</option>
+                        <option value="07:30">07:30 AM</option>
+                        <option value="08:00">08:00 AM</option>
+                        <option value="08:30">08:30 AM</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="12:00">12:00 PM (Noon)</option>
+                        <option value="12:30">12:30 PM</option>
+                        <option value="13:00">01:00 PM</option>
+                        <option value="13:30">01:30 PM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="14:30">02:30 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="15:30">03:30 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                        <option value="16:30">04:30 PM</option>
+                        <option value="17:00">05:00 PM</option>
+                        <option value="17:30">05:30 PM</option>
+                        <option value="18:00">06:00 PM</option>
+                        <option value="18:30">06:30 PM</option>
+                        <option value="19:00">07:00 PM</option>
+                        <option value="19:30">07:30 PM</option>
+                        <option value="20:00">08:00 PM</option>
+                        <option value="20:30">08:30 PM</option>
+                        <option value="21:00">09:00 PM</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="endTime">End Time</label>
-                    <input type="time" id="endTime" name="endTime" required>
+                    <select id="endTime" name="endTime" required onchange="validateTimeRange()">
+                        <option value="">-- Select End Time --</option>
+                        <option value="07:30">07:30 AM</option>
+                        <option value="08:00">08:00 AM</option>
+                        <option value="08:30">08:30 AM</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="12:00">12:00 PM (Noon)</option>
+                        <option value="12:30">12:30 PM</option>
+                        <option value="13:00">01:00 PM</option>
+                        <option value="13:30">01:30 PM</option>
+                        <option value="14:00">02:00 PM</option>
+                        <option value="14:30">02:30 PM</option>
+                        <option value="15:00">03:00 PM</option>
+                        <option value="15:30">03:30 PM</option>
+                        <option value="16:00">04:00 PM</option>
+                        <option value="16:30">04:30 PM</option>
+                        <option value="17:00">05:00 PM</option>
+                        <option value="17:30">05:30 PM</option>
+                        <option value="18:00">06:00 PM</option>
+                        <option value="18:30">06:30 PM</option>
+                        <option value="19:00">07:00 PM</option>
+                        <option value="19:30">07:30 PM</option>
+                        <option value="20:00">08:00 PM</option>
+                        <option value="20:30">08:30 PM</option>
+                        <option value="21:00">09:00 PM</option>
+                        <option value="21:30">09:30 PM</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -533,6 +596,16 @@
                 roomSelect.add(optionElement);
             }
         });
+    function validateTimeRange() {
+        const start = document.getElementById("startTime").value;
+        const end = document.getElementById("endTime").value;
+        const endSelect = document.getElementById("endTime");
+        
+        if (start && end && start >= end) {
+            endSelect.setCustomValidity("End time must be later than start time");
+        } else {
+            endSelect.setCustomValidity("");
+        }
     }
 </script>
 
