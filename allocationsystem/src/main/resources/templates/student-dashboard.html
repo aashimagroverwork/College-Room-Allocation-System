@@ -382,24 +382,33 @@
             <h2 class="section-title">Request a Room</h2>
             <form th:action="@{/student/bookings}" method="post">
                 <div class="form-group">
-                    <label for="room-section">Select Section / Block</label>
-                    <select id="room-section" onchange="updateRoomDropdown()" required>
-                        <option value="">-- Select Section --</option>
-                        <option value="labs">Specialized Rooms & Labs</option>
-                        <option value="lrs">Lecture Rooms (Lrs)</option>
-                        <option value="crs">Classrooms (Crs)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label for="room">Select Room / Hall</label>
-                    <select id="room" name="roomId" required disabled>
-                        <option value="">-- Choose a section first --</option>
-                        <option th:each="room : ${rooms}"
-                                th:value="${room.id}"
-                                th:data-building="${room.building}"
-                                th:text="${room.name + ' - ' + room.building + ' (Cap: ' + room.capacity + ')'}">
-                        </option>
+                    <select id="room" name="roomId" required>
+                        <option value="">-- Choose a Room / Hall --</option>
+                        
+                        <optgroup label="🔬 Specialized Rooms & Labs">
+                            <option th:each="room : ${rooms}"
+                                    th:if="${room.building != 'Lrs Block' and room.building != 'Crs Block'}"
+                                    th:value="${room.id}"
+                                    th:text="${room.name + ' (' + room.building + ' - Cap: ' + room.capacity + ')'}">
+                            </option>
+                        </optgroup>
+
+                        <optgroup label="📚 Lecture Rooms (Lrs 1 - 50)">
+                            <option th:each="room : ${rooms}"
+                                    th:if="${room.building == 'Lrs Block'}"
+                                    th:value="${room.id}"
+                                    th:text="${room.name + ' (Cap: ' + room.capacity + ')'}">
+                            </option>
+                        </optgroup>
+
+                        <optgroup label="🏫 Classrooms (Crs 1 - 40)">
+                            <option th:each="room : ${rooms}"
+                                    th:if="${room.building == 'Crs Block'}"
+                                    th:value="${room.id}"
+                                    th:text="${room.name + ' (Cap: ' + room.capacity + ')'}">
+                            </option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -529,8 +538,6 @@
 </div>
 
 <script>
-    let allRoomOptions = [];
-
     document.addEventListener("DOMContentLoaded", function() {
         // Pre-populate date picker with tomorrow's date by default
         const dateInput = document.getElementById("date");
@@ -542,60 +549,8 @@
             const dd = String(tomorrow.getDate()).padStart(2, '0');
             dateInput.value = `${yyyy}-${mm}-${dd}`;
         }
-
-        // Store all original room options in an array
-        const roomSelect = document.getElementById("room");
-        if (roomSelect) {
-            const options = roomSelect.querySelectorAll("option");
-            // Skip the first default placeholder option
-            for (let i = 1; i < options.length; i++) {
-                allRoomOptions.push({
-                    value: options[i].value,
-                    text: options[i].text,
-                    building: options[i].getAttribute("data-building")
-                });
-            }
-            
-            // Initially clear all except first option
-            clearRoomOptions();
-        }
     });
 
-    function clearRoomOptions() {
-        const roomSelect = document.getElementById("room");
-        roomSelect.innerHTML = '<option value="">-- Choose a section first --</option>';
-        roomSelect.disabled = true;
-    }
-
-    function updateRoomDropdown() {
-        const section = document.getElementById("room-section").value;
-        const roomSelect = document.getElementById("room");
-        
-        if (!section) {
-            clearRoomOptions();
-            return;
-        }
-        
-        roomSelect.disabled = false;
-        roomSelect.innerHTML = '<option value="">-- Choose a room --</option>';
-        
-        allRoomOptions.forEach(opt => {
-            let matches = false;
-            if (section === "lrs" && opt.building === "Lrs Block") {
-                matches = true;
-            } else if (section === "crs" && opt.building === "Crs Block") {
-                matches = true;
-            } else if (section === "labs" && opt.building !== "Lrs Block" && opt.building !== "Crs Block") {
-                matches = true;
-            }
-            
-            if (matches) {
-                const optionElement = document.createElement("option");
-                optionElement.value = opt.value;
-                optionElement.text = opt.text;
-                roomSelect.add(optionElement);
-            }
-        });
     function validateTimeRange() {
         const start = document.getElementById("startTime").value;
         const end = document.getElementById("endTime").value;
