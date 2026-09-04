@@ -1,0 +1,17 @@
+{
+  "name": "College-Room-Allocation-System",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "containerEnv": {
+    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "DB_PASSWORD": "collegeallocationsystem"
+  },
+  "postCreateCommand": "echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc",
+  "postStartCommand": "fuser -k 8081/tcp 2>/dev/null; cd allocationsystem && nohup ./mvnw spring-boot:run > /tmp/app.log 2>&1 &",
+  "forwardPorts": [8081],
+  "portsAttributes": {
+    "8081": {
+      "label": "Login Portal",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}
