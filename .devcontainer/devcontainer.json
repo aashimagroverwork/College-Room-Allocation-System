@@ -2,7 +2,7 @@
   "name": "College-Room-Allocation-System",
   "image": "mcr.microsoft.com/devcontainers/java:17",
   "containerEnv": {
-    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current",
     "DB_PASSWORD": "collegeallocationsystem"
   },
   "postCreateCommand": "echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc",
