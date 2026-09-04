@@ -9,7 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                String role = authority.getAuthority();
+                if (role.equals("ROLE_STUDENT")) {
+                    return "redirect:/student/dashboard";
+                } else if (role.equals("ROLE_HOD")) {
+                    return "redirect:/hod/dashboard";
+                } else if (role.equals("ROLE_ADMIN")) {
+                    return "redirect:/admin/dashboard";
+                }
+            }
+        }
         return "login";
     }
 
